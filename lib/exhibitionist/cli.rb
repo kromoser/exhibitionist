@@ -3,6 +3,7 @@ class Exhibitionist::CLI
   def call
     display_museums
     choose_museum
+    choose_show
     exit
   end
 
@@ -29,7 +30,10 @@ class Exhibitionist::CLI
       input = gets.strip.downcase
 
       if input == "1"
-        puts "The Met - Current Exhibitions:"
+        Exhibitionist::Shows.met_scraper.each.with_index(1) do |show, index|
+          puts "#{index}. #{show.title} - #{show.dates}"
+        end
+
       elsif input == "2"
         puts "MoMA - Current Exhibitions:"
       elsif input == "3"
