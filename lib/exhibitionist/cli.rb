@@ -3,7 +3,7 @@ class Exhibitionist::CLI
   def call
     display_museums
     choose_museum
-    choose_show
+    
     exit
   end
 
@@ -25,14 +25,17 @@ class Exhibitionist::CLI
   def choose_museum
 
     input = nil
+    @museum_id = nil
 
     while input != "exit"
       input = gets.strip.downcase
 
       if input == "1"
+        @museum_id = "met"
         Exhibitionist::Shows.met_scraper.each.with_index(1) do |show, index|
-          puts "#{index}. #{show.title} - #{show.dates}"
+          puts "#{index}. #{show.title}"
         end
+        choose_show
 
       elsif input == "2"
         puts "MoMA - Current Exhibitions:"
@@ -50,6 +53,20 @@ class Exhibitionist::CLI
         puts "I couldn't understand that. Please enter the number of the museum you'd like to view, 'all' to list all shows, or 'exit'."
       end
     end 
+  end
+
+  def choose_show
+    puts "What show would you like more info about?"
+    input = gets.strip.to_i - 1
+    if @museum_id == "met"
+      puts Exhibitionist::Shows.met_scraper[input].title
+      puts Exhibitionist::Shows.met_scraper[input].dates
+      puts "Show summary here"
+    else
+    end
+
+
+
   end
 
   def exit
