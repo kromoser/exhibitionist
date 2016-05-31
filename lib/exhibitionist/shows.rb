@@ -1,5 +1,5 @@
 class Exhibitionist::Shows
-  attr_accessor :title, :summary, :dates, :museum, :url
+  attr_accessor :title, :summary, :dates, :museum, :url, :closing_date
 
   def self.met_scraper
 
@@ -17,8 +17,13 @@ class Exhibitionist::Shows
 
       new_show.title = show.text
       new_show.museum = "Met"
-      
+      new_show.url = show.attribute("href").value
       new_show.dates = show.parent.parent.next.next
+      new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")
+      #binding.pry
+      #show_summary_page = Nokogiri::HTML(open(new_show.url))
+
+      #new_show.summary = show_summary_page.css("div.general-content").text
       #binding.pry
     end
 

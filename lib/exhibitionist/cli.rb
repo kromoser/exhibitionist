@@ -31,8 +31,8 @@ class Exhibitionist::CLI
       input = gets.strip.downcase
 
       if input == "1"
-        @museum_id = "met"
-        Exhibitionist::Shows.met_scraper.each.with_index(1) do |show, index|
+        @museum_id = Exhibitionist::Shows.met_scraper
+        @museum_id.each.with_index(1) do |show, index|
           puts "#{index}. #{show.title}"
         end
         choose_show
@@ -58,13 +58,10 @@ class Exhibitionist::CLI
   def choose_show
     puts "What show would you like more info about?"
     input = gets.strip.to_i - 1
-    if @museum_id == "met"
-      puts Exhibitionist::Shows.met_scraper[input].title
-      puts Exhibitionist::Shows.met_scraper[input].dates
-      puts "Show summary here"
-    else
-    end
-
+    puts @museum_id[input].title
+    puts @museum_id[input].dates
+    puts "This show closes on #{@museum_id[input].closing_date}"
+   
 
 
   end
