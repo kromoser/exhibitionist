@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "exhbitionist"
+require "exhibitionist"
 
 Exhibitionist::CLI.new.call

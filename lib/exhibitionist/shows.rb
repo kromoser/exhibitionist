@@ -1,6 +1,5 @@
-class Exhibitionist::Museums
-  
-
+class Exhibitionist::Shows
+  attr_accessor :title, :summary, :dates, :museum
 
   def self.met_scraper
 
@@ -14,11 +13,13 @@ class Exhibitionist::Museums
     current_shows.each do |show|
       new_show = self.new
       met_shows << new_show
-      new_show.title
+      new_show.title = show.text
+      new_show.museum = "Met"
+    end
 
+    met_shows
 
-
-    
   end
+
 
 end
