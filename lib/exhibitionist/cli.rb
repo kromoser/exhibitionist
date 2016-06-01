@@ -1,41 +1,38 @@
 class Exhibitionist::CLI
 
   def call
-    display_museums
-    choose_museum
+    display_shows
+    choose_exhibition
     
     exit
   end
 
-  def display_museums
-    puts "Welcome to the Exhibitionist."
+  def display_shows
+    puts "Welcome to the Exhibitionist.\n"
+    puts "These shows are closing soon!"
+    #Exhibitionist::Shows.met_scraper
+    Exhibitionist::Shows.all.each.with_index(1) do |show, index|
+      puts "#{index}. #{show.title}"
+    end
 
-    puts  "1. Metropolitan Museum of Art"
-    puts  "2. MoMA"
-    puts  "3. Whitney Museum of American Art"
-    puts  "4. Guggenheim Museum"
-    puts  "5. Brooklyn Museum"
-    puts  "6. New Museum"
-    puts  "7. MoMA PS1"
-    puts  "8. Rubin Museum of Art"
+    
 
-    puts "Which museum would you like to view?"
+    puts "Which show are you interested in?"
   end
 
-  def choose_museum
+
+# ##### CHANGE TO THIS TO SELECT A SHOW ##### #
+
+  def choose_exhibition
 
     input = nil
-    @museum_id = nil
 
     while input != "exit"
-      input = gets.strip.downcase
+      input = gets.strip.downcase.to_i - 1
 
-      if input == "1"
-        @museum_id = Exhibitionist::Shows.met_scraper
-        @museum_id.each.with_index(1) do |show, index|
-          puts "#{index}. #{show.title}"
-        end
-        choose_show
+      if input == 0
+        puts "#{Exhibitionist::Shows.all[0].title}"
+        puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}"
 
       elsif input == "2"
         puts "MoMA - Current Exhibitions:"
@@ -59,8 +56,9 @@ class Exhibitionist::CLI
     puts "What show would you like more info about?"
     input = gets.strip.to_i - 1
     puts @museum_id[input].title
-    puts @museum_id[input].dates
+    #puts @museum_id[input].dates
     puts "This show closes on #{@museum_id[input].closing_date}"
+    puts 
    
 
 

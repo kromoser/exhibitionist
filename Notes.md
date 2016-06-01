@@ -6,46 +6,42 @@ Interface:
 
 "Welcome to the Exhbitionist."
 
-2. Prints list of museums:
+2. Prints list of shows, sorted by closing date:
 
-"1. Metropolitan Museum of Art"
-"2. MoMA"
-"3. Whitney Museum of American Art"
-"4. Guggenheim Museum"
-"5. Brooklyn Museum"
-"6. New Museum"
-"7. MoMA PS1"
-"8. Rubin Museum of Art"
+"These shows are closing soon!"
+"1. Show Title #1"
+"2. Another Show"
+"3. Art show #3"
+"4. Show Title"
+"5. Show Title"
+"6. Show Title"
+"7. Show Title"
+"8. Show Title"
+"9. Art Show"
+"10. Art Show"
+
+
 
 3. Asks user for input:
 
-"Which museum would you like to view?"
-
-4. User gives input, and list of current exhibitions is printed:
-
-"Metropolitan Museum of Art - Current Exhibitions:"
-"1. Nasreen Mohamedi"
-"2. Pergamon and the Hellenistic Kingdoms of the Ancient World"
-"3. Court and Cosmos: The Great Age of the Seljuqs"
-"4. Turner's Whaling Pictures"
-"5. Manus X. Machina: Fashion in an Age of Technology"
-
-5. Asks user if they'd like more info:
-
 "Which show are you interested in?"
 
-6. User gives input, and more info is printed:
+4. User gives input, and details of show are listed:
+
 
 "Nasreen Mohamedi"
-"One of the most significant artists to emerge in post-Independence India, Nasreen Mohamedi (1937–1990) created a body of work that demonstrates a singular and sustained engagement with abstraction. Her minimalist practice not only adds a rich layer to the history of South Asian art but also necessitates an expansion of the narratives of international modernism. The Met Breuer exhibition, the first museum retrospective of the artist's work in the United States, is an important part of the Met's initiative to explore and present the global scope of modern and contemporary art."
-"Closes June 5"
+"Where: The Metropolitan Museum of Art"
+"10 days until close!"
+"Other current exhibits at at this museum:"
+"Show Title 1 until Date"
+"Show Title 2 until Date"
+"Show Title 3 until Date"
 
-7. Commands:
+5. Commands:
 
-"list" should go to master list
+"ending soon" should go to master list
 "exit" should exit
-"back" should go up one level
-"all shows" or "all exhibitions" should list all shows:
+"all shows" or "all exhibitions" should list all shows and their museums:
     "1. Metropolitcan Museum of Art - Nasreen Mohamedi"
     "2. Metropolitan Museum of Art - Show 2 Title"
     "3. MoMA - Show 1 Title"
@@ -56,6 +52,5 @@ Interface:
 
 Structure
 
-Museums should have shows.
 
-Shows should have a title, synopsis, and closing date
+Shows should have a title, museum, and closing date
