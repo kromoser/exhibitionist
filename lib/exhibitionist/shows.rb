@@ -1,7 +1,7 @@
 
 
 class Exhibitionist::Shows
-  attr_accessor :title, :summary, :dates, :museum, :url, :closing_date
+  attr_accessor :title, :summary, :dates, :museum, :url, :closing_date, :days_left
 
   
   @@all_shows = []
@@ -25,11 +25,27 @@ class Exhibitionist::Shows
       new_show.museum = Exhibitionist::Museums.new("Metropolitan Museum of Art")
       new_show.url = show.attribute("href").value
       new_show.dates = show.parent.parent.next.next
-      new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")      
+      new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")
+      closing_date_object = Date.parse(new_show.closing_date)
+      today = Date.today
+
+      new_show.days_left = (closing_date_object - today).to_i
+
+      #binding.pry    
     end
 
     met_shows
 
+  end
+
+
+
+  def closing_soon_alert
+    if self.days_left < 8
+      puts "CLOSING SOON!!! Hurry up, there are only"
+    else
+
+    end
   end
 
   def self.scrape_all

@@ -30,21 +30,23 @@ class Exhibitionist::CLI
 
   def choose_exhibition
 
-   
-
-    
       input = gets.strip
 
       if input.downcase.to_i > 0
         input = input.downcase.to_i - 1
-        puts "#{Exhibitionist::Shows.all[input].title}"
-        puts "at #{Exhibitionist::Shows.all[input].museum.name}\n\n"
-        puts "Closes on #{Exhibitionist::Shows.all[input].closing_date}\n\n"
+
+        exhibit = Exhibitionist::Shows.all[input]
+        puts "#{exhibit.title}"
+        puts "at #{exhibit.museum.name}\n\n"
+        puts "Closes on #{exhibit.closing_date}\n\n"
+
+        puts "#{exhibit.closing_soon_alert}#{exhibit.days_left} days left to see this show!\n\n"
+
         puts "Other shows at this museum:"
 
         Exhibitionist::Shows.all.each.with_index(1) do |show, index|
-          if show.museum.name == Exhibitionist::Shows.all[input].museum.name
-            puts "#{index}. #{show.title}"
+          if show.museum.name == exhibit.museum.name && show.title != exhibit.title
+            puts show.title
             puts "On view through #{show.closing_date}\n\n"
           else
           end
