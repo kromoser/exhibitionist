@@ -26,8 +26,7 @@ Interface:
 
 "Which show are you interested in?"
 
-4. User gives input, and details of show are listed:
-
+4. User gives input, and details of show are listed. Also, other shows at the same museum are listed:
 
 "Nasreen Mohamedi"
 "Where: The Metropolitan Museum of Art"

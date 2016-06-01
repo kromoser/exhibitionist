@@ -1,16 +1,21 @@
 class Exhibitionist::CLI
 
+  def initialize
+    Exhibitionist::Shows.all.clear
+    Exhibitionist::Shows.scrape_all
+  end
+
   def call
     display_shows
     choose_exhibition
     
-    exit
+    #exit
   end
 
   def display_shows
     puts "Welcome to the Exhibitionist.\n"
     puts "These shows are closing soon!"
-    Exhibitionist::Shows.met_scraper
+    
     Exhibitionist::Shows.all.each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
@@ -25,45 +30,64 @@ class Exhibitionist::CLI
 
   def choose_exhibition
 
-    input = nil
+   
 
-    while input != "exit"
+    
       input = gets.strip
 
-      if input.downcase.to_i - 1 == 0
-        puts "#{Exhibitionist::Shows.all[0].title}"
-        puts "at #{Exhibitionist::Shows.all[0].museum.name}\n\n"
-        puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}\n\n"
+      if input.downcase.to_i > 0
+        input = input.downcase.to_i - 1
+        puts "#{Exhibitionist::Shows.all[input].title}"
+        puts "at #{Exhibitionist::Shows.all[input].museum.name}\n\n"
+        puts "Closes on #{Exhibitionist::Shows.all[input].closing_date}\n\n"
         puts "Other shows at this museum:"
 
         Exhibitionist::Shows.all.each.with_index(1) do |show, index|
-          if show.museum.name == Exhibitionist::Shows.all[0].museum.name
+          if show.museum.name == Exhibitionist::Shows.all[input].museum.name
             puts "#{index}. #{show.title}"
             puts "On view through #{show.closing_date}\n\n"
           else
           end
         end
+
+        choose_again
+
+      #if input.downcase.to_i - 1 == 0
+      #  puts "#{Exhibitionist::Shows.all[0].title}"
+      #  puts "at #{Exhibitionist::Shows.all[0].museum.name}\n\n"
+       # puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}\n\n"
+       # puts "Other shows at this museum:"
+
+       # Exhibitionist::Shows.all.each.with_index(1) do |show, index|
+       #   if show.museum.name == Exhibitionist::Shows.all[0].museum.name
+       #     puts "#{index}. #{show.title}"
+       #     puts "On view through #{show.closing_date}\n\n"
+       #   else
+       #   end
+       # end
        
 
-      elsif input.downcase.to_i - 1 == 1
-        puts "#{Exhibitionist::Shows.all[1].title}"
-        puts "at #{Exhibitionist::Shows.all[1].museum.name}"
-        puts "Closes on #{Exhibitionist::Shows.all[1].closing_date}"
+      #elsif input.downcase.to_i - 1 == 1
+      #  puts "#{Exhibitionist::Shows.all[1].title}"
+      #  puts "at #{Exhibitionist::Shows.all[1].museum.name}"
+      #  puts "Closes on #{Exhibitionist::Shows.all[1].closing_date}"
 
-      elsif input == "3"
-        puts "Whitney Museum - Current Exhibitions:"
-      elsif input == "list"
-        call
-      elsif input == "back"
-        call
+      #elsif input == "3"
+      #  puts "Whitney Museum - Current Exhibitions:"
+      #elsif input == "list"
+      #  call
+      #elsif input == "back"
+      #  call
       #elsif input == "exit"
       #  exit
       elsif input == "all"
         puts "All Current Exhibitions:"
+      elsif input == "exit"
+        exit          
       else
         puts "I couldn't understand that. Please enter the number of the museum you'd like to view, 'all' to list all shows, or 'exit'."
       end
-    end 
+    
   end
 
   def choose_show
@@ -76,6 +100,19 @@ class Exhibitionist::CLI
    
 
 
+  end
+
+  def choose_again
+    puts "Would you like to learn about another show? (Y/N)"
+    input = gets.strip.downcase
+    if input == "y"
+      self.class.new.call
+    elsif input == "n" or input == "exit"
+      exit
+    else
+      puts "I couldn't understand that. Please enter Y or N."
+    end
+      
   end
 
   def exit
