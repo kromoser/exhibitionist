@@ -10,7 +10,7 @@ class Exhibitionist::CLI
   def display_shows
     puts "Welcome to the Exhibitionist.\n"
     puts "These shows are closing soon!"
-    #Exhibitionist::Shows.met_scraper
+    Exhibitionist::Shows.met_scraper
     Exhibitionist::Shows.all.each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
@@ -28,14 +28,28 @@ class Exhibitionist::CLI
     input = nil
 
     while input != "exit"
-      input = gets.strip.downcase.to_i - 1
+      input = gets.strip
 
-      if input == 0
+      if input.downcase.to_i - 1 == 0
         puts "#{Exhibitionist::Shows.all[0].title}"
-        puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}"
+        puts "at #{Exhibitionist::Shows.all[0].museum.name}\n\n"
+        puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}\n\n"
+        puts "Other shows at this museum:"
 
-      elsif input == "2"
-        puts "MoMA - Current Exhibitions:"
+        Exhibitionist::Shows.all.each.with_index(1) do |show, index|
+          if show.museum.name == Exhibitionist::Shows.all[0].museum.name
+            puts "#{index}. #{show.title}"
+            puts "On view through #{show.closing_date}\n\n"
+          else
+          end
+        end
+       
+
+      elsif input.downcase.to_i - 1 == 1
+        puts "#{Exhibitionist::Shows.all[1].title}"
+        puts "at #{Exhibitionist::Shows.all[1].museum.name}"
+        puts "Closes on #{Exhibitionist::Shows.all[1].closing_date}"
+
       elsif input == "3"
         puts "Whitney Museum - Current Exhibitions:"
       elsif input == "list"

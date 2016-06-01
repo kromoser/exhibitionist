@@ -1,3 +1,5 @@
+
+
 class Exhibitionist::Shows
   attr_accessor :title, :summary, :dates, :museum, :url, :closing_date
 
@@ -5,8 +7,6 @@ class Exhibitionist::Shows
   @@all_shows = []
   
   def self.all
-    self.met_scraper
-    
     @@all_shows
   end
 
@@ -22,6 +22,7 @@ class Exhibitionist::Shows
       met_shows << new_show
       @@all_shows << new_show
       new_show.title = show.text
+      new_show.museum = Exhibitionist::Museums.new("Metropolitan Museum of Art")
       new_show.url = show.attribute("href").value
       new_show.dates = show.parent.parent.next.next
       new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")
