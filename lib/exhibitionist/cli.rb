@@ -16,7 +16,7 @@ class Exhibitionist::CLI
     puts "Welcome to the Exhibitionist.\n"
     puts "These shows are closing soon!"
     
-    Exhibitionist::Shows.all.each.with_index(1) do |show, index|
+    Exhibitionist::Shows.sort_by_closing_date.each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
 
@@ -35,7 +35,7 @@ class Exhibitionist::CLI
       if input.downcase.to_i > 0
         input = input.downcase.to_i - 1
 
-        exhibit = Exhibitionist::Shows.all[input]
+        exhibit = Exhibitionist::Shows.sort_by_closing_date[input]
         puts "#{exhibit.title}"
         puts "at #{exhibit.museum.name}\n\n"
         puts "Closes on #{exhibit.closing_date}\n\n"
