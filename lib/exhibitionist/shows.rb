@@ -22,7 +22,7 @@ class Exhibitionist::Shows
       met_shows << new_show
       self.all << new_show
       new_show.title = show.text
-      new_show.museum = Exhibitionist::Museums.new("Metropolitan Museum of Art")
+      new_show.museum = Exhibitionist::Museums.find_or_create("Metropolitan Museum of Art")
       #new_show.url = show.attribute("href").value
       new_show.dates = show.parent.parent.next.next
       new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")
@@ -31,7 +31,7 @@ class Exhibitionist::Shows
 
       new_show.days_left = (closing_date_object - today).to_i
 
-      #binding.pry    
+        
     end
 
     met_shows
@@ -52,7 +52,7 @@ class Exhibitionist::Shows
       moma_shows << new_show
       self.all << new_show
       new_show.title = show.css("h3").text.strip
-      new_show.museum = Exhibitionist::Museums.new("MoMA")
+      new_show.museum = Exhibitionist::Museums.find_or_create("MoMA")
 
       if show.css("p").text.strip.downcase != "ongoing"
         new_show.closing_date = show.css("p").text.gsub(/^(.+?),\s/, "").strip
@@ -81,7 +81,7 @@ class Exhibitionist::Shows
       whitney_shows << new_show
       self.all << new_show
       new_show.title = show.css("h3 a")[0].text.gsub("â", "'").strip
-      new_show.museum = Exhibitionist::Museums.new("Whitney")
+      new_show.museum = Exhibitionist::Museums.find_or_create("Whitney")
       new_show.dates = show.css("h3 span")
       
       new_show.closing_date = new_show.dates.text.gsub(/^.+\–/, "")
@@ -107,7 +107,7 @@ class Exhibitionist::Shows
       brooklyn_shows << new_show
       self.all << new_show
       new_show.title = show.text
-      new_show.museum = Exhibitionist::Museums.new("Brooklyn Museum")
+      new_show.museum = Exhibitionist::Museums.find_or_create("Brooklyn Museum")
       new_show.dates = show.parent.css("h4")
       new_show.closing_date = new_show.dates.text.strip.gsub(/^.+\–/, "")
       closing_date_object = Date.parse(new_show.closing_date)
@@ -133,7 +133,7 @@ class Exhibitionist::Shows
       new_museum_shows << new_show
       self.all << new_show
       new_show.title = show.css("span.title").text
-      new_show.museum = Exhibitionist::Museums.new("New Museum")
+      new_show.museum = Exhibitionist::Museums.find_or_create("New Museum")
       new_show.dates = show.css("span.date-range")
       new_show.closing_date = new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")
       closing_date_object = Date.strptime("#{new_show.closing_date}", "%m/%d/%y")
