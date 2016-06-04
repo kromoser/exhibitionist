@@ -1,8 +1,12 @@
 class Exhibitionist::CLI
 
   def initialize
-    Exhibitionist::Shows.all.clear
+    
+    puts "Welcome to the Exhibitionist.\n"
+    puts "Finding shows...\n\n"
+    #Exhibitionist::Shows.all.clear
     Exhibitionist::Shows.scrape_all
+    
   end
 
   def call
@@ -13,14 +17,13 @@ class Exhibitionist::CLI
   end
 
   def display_shows
-    puts "Welcome to the Exhibitionist.\n"
-    puts "Finding shows...\n\n"
+   
     
     Exhibitionist::Shows.sort_by_closing_date.first(10).each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
 
-    puts "These are 10 shows closing soon, listed by which is closing soonest."
+    puts "\nHere are 10 shows closing soon, listed by which is closing soonest."
 
     
   end
@@ -38,18 +41,20 @@ class Exhibitionist::CLI
         input = input.downcase.to_i - 1
 
         exhibit = Exhibitionist::Shows.sort_by_closing_date[input]
-        puts "#{exhibit.title}"
-        puts "at #{exhibit.museum.name}\n\n"
-        puts "Closes on #{exhibit.closing_date}\n\n"
+        puts "\n\n#{exhibit.title}\n\n"
+        puts "at the #{exhibit.museum.name}\n\n"
+        
+        exhibit.closing_info
+        #puts "Closes on #{exhibit.closing_date}\n\n"
 
-        puts "#{exhibit.closing_soon_alert}#{exhibit.days_left} days left to see this show!\n\n"
+        #puts "#{exhibit.closing_soon_alert}#{exhibit.days_left} days left to see this show!\n\n"
 
-        puts "Other shows at this museum:"
+        puts "\n\nOther shows at this museum:\n\n"
 
         Exhibitionist::Shows.all.each.with_index(1) do |show, index|
           if show.museum.name == exhibit.museum.name && show.title != exhibit.title
             puts show.title
-            puts "On view through #{show.closing_date}\n\n"
+            show.on_view_through
           else
           end
         end
@@ -99,7 +104,7 @@ class Exhibitionist::CLI
     puts "Would you like to learn about another show? (Y/N)"
     input = gets.strip.downcase
     if input == "y"
-      self.class.new.call
+      call
     elsif input == "n" or input == "exit"
       exit
     else

@@ -135,10 +135,8 @@ class Exhibitionist::Shows
       new_show.title = show.css("span.title").text
       new_show.museum = Exhibitionist::Museums.new("New Museum")
       new_show.dates = show.css("span.date-range")
-
       new_show.closing_date = new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")
       closing_date_object = Date.strptime("#{new_show.closing_date}", "%m/%d/%y")
-
       new_show.days_left = (closing_date_object - Date.today).to_i
 
       
@@ -162,11 +160,34 @@ class Exhibitionist::Shows
   end
 
   def self.scrape_all
-    #self.met_scraper
-    #self.moma_scraper
-    #self.whitney_scraper
-    #self.brooklyn_scraper
-    #self.new_museum_scraper
+    self.met_scraper
+    self.moma_scraper
+    self.whitney_scraper
+    self.brooklyn_scraper
+    self.new_museum_scraper
+  end
+
+  def closing_info
+
+    if self.days_left == 1
+      puts "Hurry Up! This show closes in 1 day!!"
+    elsif self.days_left < 8
+      puts "Hurry up! This show closes in #{self.days_left} days!! It closes on #{self.closing_date}."
+    elsif self.closing_date == "Ongoing"
+      puts "This show is ongoing. You've got plenty of time."
+    else 
+      puts "This show closes in #{self.days_left} days, on #{self.closing_date}."
+    end
+
+  end
+
+  def on_view_through
+
+    if self.closing_date == "Ongoing"
+      puts "This show is ongoing.\n\n"
+    else
+      puts "On view through #{self.closing_date}.\n\n"
+    end
   end
 
 
