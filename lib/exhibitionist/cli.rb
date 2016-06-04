@@ -14,11 +14,13 @@ class Exhibitionist::CLI
 
   def display_shows
     puts "Welcome to the Exhibitionist.\n"
-    puts "These shows are closing soon!"
+    puts "Finding shows...\n\n"
     
     Exhibitionist::Shows.sort_by_closing_date.first(10).each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
+
+    puts "These are 10 shows closing soon, listed by which is closing soonest."
 
     
   end
@@ -28,7 +30,7 @@ class Exhibitionist::CLI
 
   def choose_exhibition
 
-      puts "Which show are you interested in?"
+      puts "Pick a show you're interested in, or type 'all' to see a list of every exhibition."
 
       input = gets.strip
 

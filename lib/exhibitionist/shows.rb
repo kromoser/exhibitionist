@@ -100,11 +100,7 @@ class Exhibitionist::Shows
     html = open("https://www.brooklynmuseum.org/exhibitions")
     current_shows_page = Nokogiri::HTML(html)
 
-    after = current_shows_page.css("div.exhibitions").xpath("//h1[1]/following-sibling::div").css("div.image-card h2")
-    #before = current_shows_page.css("div.exhibitions").xpath("//h1[2]/preceding-sibling::div").css("div.image-card")
-
-    current_shows = after
-
+    current_shows = current_shows_page.css("div.exhibitions").xpath("//h1[1]/following-sibling::div").css("div.image-card h2")
 
     current_shows.each do |show|
       new_show = self.new
@@ -123,6 +119,34 @@ class Exhibitionist::Shows
 
   end
 
+  def self.new_museum_scraper
+
+    new_museum_shows = []
+
+    html = open("http://www.newmuseum.org/exhibitions")
+    current_shows_page = Nokogiri::HTML(html)
+
+    current_shows = current_shows_page.css("div.columns div.exh a")
+
+    current_shows.each do |show|
+      new_show = self.new
+      new_museum_shows << new_show
+      self.all << new_show
+      new_show.title = show.css("span.title").text
+      new_show.museum = Exhibitionist::Museums.new("New Museum")
+      new_show.dates = show.css("span.date-range")
+
+      new_show.closing_date = new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")
+      closing_date_object = Date.strptime("#{new_show.closing_date}", "%m/%d/%y")
+
+      new_show.days_left = (closing_date_object - Date.today).to_i
+
+      
+    end
+    
+    new_museum_shows
+  end
+
 
   def self.sort_by_closing_date
     self.all.sort_by { |show| show.days_left }
@@ -138,10 +162,11 @@ class Exhibitionist::Shows
   end
 
   def self.scrape_all
-    self.met_scraper
-    self.moma_scraper
-    self.whitney_scraper
-    self.brooklyn_scraper
+    #self.met_scraper
+    #self.moma_scraper
+    #self.whitney_scraper
+    #self.brooklyn_scraper
+    #self.new_museum_scraper
   end
 
 
