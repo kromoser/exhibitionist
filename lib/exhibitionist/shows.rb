@@ -54,7 +54,7 @@ class Exhibitionist::Shows
       new_show.title = show.css("h3").text.strip
       new_show.museum = Exhibitionist::Museums.new("MoMA")
 
-      if show.css("p").text != "\nOngoing\n"
+      if show.css("p").text.strip.downcase != "ongoing"
         new_show.closing_date = show.css("p").text.gsub(/^(.+?),\s/, "").strip
         #binding.pry
         closing_date_object = Date.parse(new_show.closing_date)
@@ -63,14 +63,34 @@ class Exhibitionist::Shows
         new_show.closing_date = "Ongoing"
         new_show.days_left = 9999
       end
-      
-
     end
-
-
-    #binding.pry
-
     moma_shows
+  end
+
+  def self.whitney_scraper
+    
+    whitney_shows = []
+
+    html = open("http://whitney.org/Exhibitions")
+    current_shows_page = Nokogiri::HTML(html)
+
+    current_shows = current_shows_page.css("div.exhibitions div.image")
+
+    current_shows.each do |show|
+      new_show = self.new
+      whitney_shows << new_show
+      self.all << new_show
+      new_show.title = show.css("h3 a")[0].text.gsub("â", "'").strip
+      new_show.museum = Exhibitionist::Museums.new("Whitney")
+      new_show.dates = show.css("h3 span")
+      
+      new_show.closing_date = new_show.dates.text.gsub(/^.+\–/, "")
+      closing_date_object = Date.parse(new_show.closing_date)
+      new_show.days_left = (closing_date_object - Date.today).to_i
+    end
+   
+    whitney_shows
+
   end
 
 
@@ -90,6 +110,7 @@ class Exhibitionist::Shows
   def self.scrape_all
     self.met_scraper
     self.moma_scraper
+    self.whitney_scraper
   end
 
 

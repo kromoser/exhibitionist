@@ -16,19 +16,19 @@ class Exhibitionist::CLI
     puts "Welcome to the Exhibitionist.\n"
     puts "These shows are closing soon!"
     
-    Exhibitionist::Shows.sort_by_closing_date.each.with_index(1) do |show, index|
+    Exhibitionist::Shows.sort_by_closing_date.first(10).each.with_index(1) do |show, index|
       puts "#{index}. #{show.title}"
     end
 
     
-
-    puts "Which show are you interested in?"
   end
 
 
 # ##### CHANGE TO THIS TO SELECT A SHOW ##### #
 
   def choose_exhibition
+
+      puts "Which show are you interested in?"
 
       input = gets.strip
 
@@ -83,25 +83,14 @@ class Exhibitionist::CLI
       #elsif input == "exit"
       #  exit
       elsif input == "all"
-        puts "All Current Exhibitions:"
+        all_shows
       elsif input == "exit"
         exit          
       else
         puts "I couldn't understand that. Please enter the number of the museum you'd like to view, 'all' to list all shows, or 'exit'."
+        choose_exhibition
       end
     
-  end
-
-  def choose_show
-    puts "What show would you like more info about?"
-    input = gets.strip.to_i - 1
-    puts @museum_id[input].title
-    #puts @museum_id[input].dates
-    puts "This show closes on #{@museum_id[input].closing_date}"
-    puts 
-   
-
-
   end
 
   def choose_again
@@ -119,6 +108,14 @@ class Exhibitionist::CLI
 
   def exit
     puts "Goodbye! Check back soon for updated shows."
+  end
+
+  def all_shows
+    puts "All Current Exhibitions:"
+      Exhibitionist::Shows.sort_by_closing_date.each.with_index(1) do |show, index|
+        puts "#{index}. #{show.title}"
+      end
+    choose_exhibition
   end
 
 

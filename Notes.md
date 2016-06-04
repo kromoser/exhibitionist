@@ -53,3 +53,12 @@ Structure
 
 
 Shows should have a title, museum, and closing date
+
+
+TO DO:
+
+Implement a #find_or_create method for Museums
+Handle edge cases for ongoing shows
+Refactor repetitive scraping methods
+
+
