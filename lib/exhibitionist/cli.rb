@@ -4,7 +4,6 @@ class Exhibitionist::CLI
     
     puts "Welcome to the Exhibitionist.\n"
     puts "Finding shows...\n\n"
-    #Exhibitionist::Shows.all.clear
     Exhibitionist::Shows.scrape_all
     
   end
@@ -16,6 +15,8 @@ class Exhibitionist::CLI
     #exit
   end
 
+
+
   def display_shows
    
     
@@ -23,22 +24,20 @@ class Exhibitionist::CLI
       puts "#{index}. #{show.title}"
     end
 
-    puts "\nHere are 10 shows closing soon, listed by which is closing soonest."
+    puts "\nHere are 10 shows closing soon, listed by which is closing soonest.\n\n"
 
-    
   end
 
-
-# ##### CHANGE TO THIS TO SELECT A SHOW ##### #
 
   def choose_exhibition
 
       puts "Pick a show you're interested in, or type 'all' to see a list of every exhibition."
+      puts "You can also type 'museums' to see a list of museums currently represented."
 
-      input = gets.strip
+      input = gets.strip.downcase
 
-      if input.downcase.to_i > 0
-        input = input.downcase.to_i - 1
+      if input.to_i > 0
+        input = input.to_i - 1
 
         exhibit = Exhibitionist::Shows.sort_by_closing_date[input]
         puts "\n\n#{exhibit.title}\n\n"
@@ -61,40 +60,15 @@ class Exhibitionist::CLI
 
         choose_again
 
-      #if input.downcase.to_i - 1 == 0
-      #  puts "#{Exhibitionist::Shows.all[0].title}"
-      #  puts "at #{Exhibitionist::Shows.all[0].museum.name}\n\n"
-       # puts "Closes on #{Exhibitionist::Shows.all[0].closing_date}\n\n"
-       # puts "Other shows at this museum:"
-
-       # Exhibitionist::Shows.all.each.with_index(1) do |show, index|
-       #   if show.museum.name == Exhibitionist::Shows.all[0].museum.name
-       #     puts "#{index}. #{show.title}"
-       #     puts "On view through #{show.closing_date}\n\n"
-       #   else
-       #   end
-       # end
-       
-
-      #elsif input.downcase.to_i - 1 == 1
-      #  puts "#{Exhibitionist::Shows.all[1].title}"
-      #  puts "at #{Exhibitionist::Shows.all[1].museum.name}"
-      #  puts "Closes on #{Exhibitionist::Shows.all[1].closing_date}"
-
-      #elsif input == "3"
-      #  puts "Whitney Museum - Current Exhibitions:"
-      #elsif input == "list"
-      #  call
-      #elsif input == "back"
-      #  call
-      #elsif input == "exit"
-      #  exit
+      elsif input == "museums"
+        puts "The following museums are currently represented:\n\n"
+        choose_by_museum
       elsif input == "all"
         all_shows
       elsif input == "exit"
         exit          
       else
-        puts "I couldn't understand that. Please enter the number of the museum you'd like to view, 'all' to list all shows, or 'exit'."
+        puts "I couldn't understand that."
         choose_exhibition
       end
     
@@ -109,6 +83,7 @@ class Exhibitionist::CLI
       exit
     else
       puts "I couldn't understand that. Please enter Y or N."
+      choose_again
     end
       
   end
@@ -123,6 +98,33 @@ class Exhibitionist::CLI
         puts "#{index}. #{show.title}"
       end
     choose_exhibition
+  end
+
+  def choose_by_museum
+    Exhibitionist::Museums.all.each.with_index(1) do |museum, index|
+      puts "#{index}. #{museum.name}"
+    end
+    puts "\nWhich museum would you like to view? Or type 'back' to see the master exhibition list."
+    input = gets.strip.downcase
+
+    if input.to_i > 0
+      input = input.to_i - 1
+
+      puts "\n\nShows at the #{Exhibitionist::Museums.all[input].name}:\n\n"
+
+      Exhibitionist::Shows.sort_by_closing_date.each.with_index(1) do |show, index|
+        if show.museum.name == Exhibitionist::Museums.all[input].name
+          puts show.title
+          show.on_view_through
+        end
+      end
+      choose_again
+    elsif input == "back"
+      display_shows
+    else
+      puts "I could't understand that."
+      choose_again
+    end
   end
 
 
