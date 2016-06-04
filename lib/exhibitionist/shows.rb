@@ -93,6 +93,36 @@ class Exhibitionist::Shows
 
   end
 
+  def self.brooklyn_scraper 
+
+    brooklyn_shows = []
+
+    html = open("https://www.brooklynmuseum.org/exhibitions")
+    current_shows_page = Nokogiri::HTML(html)
+
+    after = current_shows_page.css("div.exhibitions").xpath("//h1[1]/following-sibling::div").css("div.image-card h2")
+    #before = current_shows_page.css("div.exhibitions").xpath("//h1[2]/preceding-sibling::div").css("div.image-card")
+
+    current_shows = after
+
+
+    current_shows.each do |show|
+      new_show = self.new
+      brooklyn_shows << new_show
+      self.all << new_show
+      new_show.title = show.text
+      new_show.museum = Exhibitionist::Museums.new("Brooklyn Museum")
+      new_show.dates = show.parent.css("h4")
+      new_show.closing_date = new_show.dates.text.strip.gsub(/^.+\–/, "")
+      closing_date_object = Date.parse(new_show.closing_date)
+      new_show.days_left = (closing_date_object - Date.today).to_i
+     
+    end
+
+    brooklyn_shows
+
+  end
+
 
   def self.sort_by_closing_date
     self.all.sort_by { |show| show.days_left }
@@ -111,6 +141,7 @@ class Exhibitionist::Shows
     self.met_scraper
     self.moma_scraper
     self.whitney_scraper
+    self.brooklyn_scraper
   end
 
 
