@@ -1,8 +1,6 @@
 # Exhibitionist
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/exhibitionist`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+The Exhibitionist is an easy way to see what art exhibtions are currently showing in NYC at a handful of major museums, all from the privacy of your terminal. It defaults to sorting current shows by how soon they're closing, so that you don't miss that show you've been meaning to see.
 
 ## Installation
 
@@ -22,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Follow the prompts to select which show you'd like to get more details about. Selecting an exhibition lists where it is located and when it's closing, as well as other shows you might want to see at the same museum. You can also view shows by instituion, if you're interested in going to a particular museum.
 
 ## Development
 
