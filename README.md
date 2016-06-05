@@ -7,7 +7,7 @@ The Exhibitionist is an easy way to see what art exhibtions are currently showin
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'exhibitionist'
+gem 'the-exhibitionist'
 ```
 
 And then execute:
