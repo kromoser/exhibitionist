@@ -16,9 +16,11 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install exhibitionist
+    $ gem install the-exhibitionist
 
 ## Usage
+
+After installing, type 'exhibitionist' to start the program.
 
 Follow the prompts to select which show you'd like to get more details about. Selecting an exhibition lists where it is located and when it's closing, as well as other shows you might want to see at the same museum. You can also view shows by instituion, if you're interested in going to a particular museum.
 
