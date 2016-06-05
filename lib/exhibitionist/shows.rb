@@ -1,7 +1,7 @@
 
 
 class Exhibitionist::Shows
-  attr_accessor :title, :summary, :dates, :museum, :url, :closing_date, :days_left
+  attr_accessor :title, :dates, :museum, :closing_date, :days_left
 
   
   @@all_shows = []
@@ -23,19 +23,13 @@ class Exhibitionist::Shows
       self.all << new_show
       new_show.title = show.text
       new_show.museum = Exhibitionist::Museums.find_or_create("Metropolitan Museum of Art")
-      #new_show.url = show.attribute("href").value
       new_show.dates = show.parent.parent.next.next
-      new_show.closing_date = new_show.dates.text.gsub(/^\n.+\–/, "")
-      closing_date_object = Date.parse(new_show.closing_date)
+      closing_date_object = Date.parse(new_show.dates.text.gsub(/^\n.+\–/, ""))
+      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       today = Date.today
-
       new_show.days_left = (closing_date_object - today).to_i
-
-        
     end
-
     met_shows
-
   end
 
   def self.moma_scraper
@@ -44,20 +38,16 @@ class Exhibitionist::Shows
 
     html = open("http://www.moma.org/calendar/exhibitions")
     current_shows_page = Nokogiri::HTML(html)
-
     current_shows = current_shows_page.css("ul.calendar-tile-list__section--featured li.calendar-tile")
-
     current_shows.each do |show|
       new_show = self.new
       moma_shows << new_show
       self.all << new_show
       new_show.title = show.css("h3").text.strip
       new_show.museum = Exhibitionist::Museums.find_or_create("MoMA")
-
       if show.css("p").text.strip.downcase != "ongoing"
-        new_show.closing_date = show.css("p").text.gsub(/^(.+?),\s/, "").strip
-        #binding.pry
-        closing_date_object = Date.parse(new_show.closing_date)
+        closing_date_object = Date.parse(show.css("p").text.gsub(/^(.+?),\s/, "").strip)
+        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
         new_show.days_left = (closing_date_object - Date.today).to_i
       else
         new_show.closing_date = "Ongoing"
@@ -73,9 +63,7 @@ class Exhibitionist::Shows
 
     html = open("http://whitney.org/Exhibitions")
     current_shows_page = Nokogiri::HTML(html)
-
     current_shows = current_shows_page.css("div.exhibitions div.image")
-
     current_shows.each do |show|
       new_show = self.new
       whitney_shows << new_show
@@ -83,9 +71,8 @@ class Exhibitionist::Shows
       new_show.title = show.css("h3 a")[0].text.gsub("â", "'").strip
       new_show.museum = Exhibitionist::Museums.find_or_create("Whitney")
       new_show.dates = show.css("h3 span")
-      
-      new_show.closing_date = new_show.dates.text.gsub(/^.+\–/, "")
-      closing_date_object = Date.parse(new_show.closing_date)
+      closing_date_object = Date.parse(new_show.dates.text.gsub(/^.+\–/, ""))
+      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       new_show.days_left = (closing_date_object - Date.today).to_i
     end
    
@@ -109,10 +96,9 @@ class Exhibitionist::Shows
       new_show.title = show.text
       new_show.museum = Exhibitionist::Museums.find_or_create("Brooklyn Museum")
       new_show.dates = show.parent.css("h4")
-      new_show.closing_date = new_show.dates.text.strip.gsub(/^.+\–/, "")
-      closing_date_object = Date.parse(new_show.closing_date)
+      closing_date_object = Date.parse(new_show.dates.text.strip.gsub(/^.+\–/, ""))
+      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       new_show.days_left = (closing_date_object - Date.today).to_i
-     
     end
 
     brooklyn_shows
@@ -125,9 +111,7 @@ class Exhibitionist::Shows
 
     html = open("http://www.newmuseum.org/exhibitions")
     current_shows_page = Nokogiri::HTML(html)
-
     current_shows = current_shows_page.css("div.columns div.exh a")
-
     current_shows.each do |show|
       new_show = self.new
       new_museum_shows << new_show
@@ -135,14 +119,13 @@ class Exhibitionist::Shows
       new_show.title = show.css("span.title").text
       new_show.museum = Exhibitionist::Museums.find_or_create("New Museum")
       new_show.dates = show.css("span.date-range")
-      new_show.closing_date = new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")
-      closing_date_object = Date.strptime("#{new_show.closing_date}", "%m/%d/%y")
-      new_show.days_left = (closing_date_object - Date.today).to_i
-
-      
+      closing_date_object = Date.strptime("#{new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")}", "%m/%d/%y")
+      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+      new_show.days_left = (closing_date_object - Date.today).to_i 
     end
     
     new_museum_shows
+
   end
 
 
@@ -156,6 +139,30 @@ class Exhibitionist::Shows
       puts "CLOSING SOON!!! Hurry up, there are only"
     else
 
+    end
+  end
+
+
+  def closing_info
+
+    if self.days_left == 1
+      puts "Hurry Up! This show closes in 1 day!!"
+    elsif self.days_left < 8
+      puts "Hurry up! This show closes in #{self.days_left} days!! It closes on #{self.closing_date}."
+    elsif self.closing_date == "Ongoing"
+      puts "This show is ongoing. You've got plenty of time."
+    else 
+      puts "This show closes in #{self.days_left} days, on #{self.closing_date}."
+    end
+
+  end
+
+  def on_view_through
+
+    if self.closing_date == "Ongoing"
+      puts "This show is ongoing.\n\n"
+    else
+      puts "On view through #{self.closing_date}.\n\n"
     end
   end
 
@@ -194,29 +201,6 @@ class Exhibitionist::Shows
     rescue
       self.all.delete_if { |show| show.museum.name == "New Museum"}
       puts "There was a problem scraping the New Museum's website... \n\n"
-    end
-  end
-
-  def closing_info
-
-    if self.days_left == 1
-      puts "Hurry Up! This show closes in 1 day!!"
-    elsif self.days_left < 8
-      puts "Hurry up! This show closes in #{self.days_left} days!! It closes on #{self.closing_date}."
-    elsif self.closing_date == "Ongoing"
-      puts "This show is ongoing. You've got plenty of time."
-    else 
-      puts "This show closes in #{self.days_left} days, on #{self.closing_date}."
-    end
-
-  end
-
-  def on_view_through
-
-    if self.closing_date == "Ongoing"
-      puts "This show is ongoing.\n\n"
-    else
-      puts "On view through #{self.closing_date}.\n\n"
     end
   end
 
