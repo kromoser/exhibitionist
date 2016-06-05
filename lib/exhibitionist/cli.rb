@@ -2,7 +2,7 @@ class Exhibitionist::CLI
 
   def initialize
     
-    puts "Welcome to the Exhibitionist.\n"
+    puts "Welcome to The Exhibitionist.\n"
     puts "Finding shows...\n\n"
     Exhibitionist::Shows.scrape_all
     

@@ -4,15 +4,17 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'exhibitionist/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "exhibitionist"
+  spec.name          = "the-exhibitionist"
   spec.version       = Exhibitionist::VERSION
   spec.authors       = ["kromoser"]
-  spec.email         = ["kevin@kevinromoser.com"]
+  spec.email         = ["kevinromoser@gmail.com"]
 
   spec.summary       = %q{Current art exhibitions in NYC}
   spec.description   = %q{A list of some of the current show in NYC, organized by closing date, so you never miss that must-see show.}
   spec.homepage      = "https://github.com/kromoser/exhibitionist"
   spec.license       = "MIT"
+
+  
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "bin"
