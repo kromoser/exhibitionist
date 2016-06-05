@@ -160,11 +160,41 @@ class Exhibitionist::Shows
   end
 
   def self.scrape_all
-    self.met_scraper
-    self.moma_scraper
-    self.whitney_scraper
-    self.brooklyn_scraper
-    self.new_museum_scraper
+    
+    begin
+      self.met_scraper
+    rescue
+      self.all.delete_if { |show| show.museum.name == "Metropolitan Museum of Art"}
+      puts "There was a problem scraping the Met's website. Finding other shows... \n\n"
+    end
+
+    begin
+      self.moma_scraper
+    rescue
+      self.all.delete_if { |show| show.museum.name == "MoMA"}
+      puts "There was a problem scraping the MoMA's website... \n\n"
+    end
+
+    begin  
+      self.whitney_scraper
+    rescue
+      self.all.delete_if { |show| show.museum.name == "Whitney"}
+      puts "There was a problem scraping the Whitney's website... \n\n"
+    end
+      
+    begin
+      self.brooklyn_scraper
+    rescue
+      self.all.delete_if { |show| show.museum.name == "Brooklyn Museum"}
+      puts "There was a problem scraping the Brooklyn Museum's website... \n\n"
+    end
+
+    begin  
+      self.new_museum_scraper
+    rescue
+      self.all.delete_if { |show| show.museum.name == "New Museum"}
+      puts "There was a problem scraping the New Museum's website... \n\n"
+    end
   end
 
   def closing_info

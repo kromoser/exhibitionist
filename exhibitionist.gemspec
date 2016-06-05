@@ -7,11 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = "exhibitionist"
   spec.version       = Exhibitionist::VERSION
   spec.authors       = ["kromoser"]
-  spec.email         = ["kevinromoser@gmail.com"]
+  spec.email         = ["kevin@kevinromoser.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Current art exhibitions in NYC}
+  spec.description   = %q{A list of some of the current show in NYC, organized by closing date, so you never miss that must-see show.}
+  spec.homepage      = "https://github.com/kromoser/exhibitionist"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
@@ -23,8 +23,9 @@ Gem::Specification.new do |spec|
   end
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.bindir        = "bin"
+  #spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.executables   = ["exhibitionist"]
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.11"
@@ -32,6 +33,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
   spec.add_dependency "nokogiri"
-  
+
   
 end

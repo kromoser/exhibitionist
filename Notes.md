@@ -58,5 +58,6 @@ Shows should have a title, museum, and closing date
 TO DO:
 
 Refactor repetitive scraping methods
+Normalize date formats
 
 
