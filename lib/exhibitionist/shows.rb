@@ -28,6 +28,9 @@ class Exhibitionist::Shows
       new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       today = Date.today
       new_show.days_left = (closing_date_object - today).to_i
+      if new_show.days_left < 0
+        self.all.delete(new_show)
+      end
     end
     met_shows
   end
@@ -53,6 +56,9 @@ class Exhibitionist::Shows
         new_show.closing_date = "Ongoing"
         new_show.days_left = 9999
       end
+      if new_show.days_left < 0
+        self.all.delete(new_show)
+      end
     end
     moma_shows
   end
@@ -74,6 +80,9 @@ class Exhibitionist::Shows
       closing_date_object = Date.parse(new_show.dates.text.gsub(/^.+\–/, ""))
       new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       new_show.days_left = (closing_date_object - Date.today).to_i
+      if new_show.days_left < 0
+        self.all.delete(new_show)
+      end
     end
    
     whitney_shows
@@ -99,6 +108,9 @@ class Exhibitionist::Shows
       closing_date_object = Date.parse(new_show.dates.text.strip.gsub(/^.+\–/, ""))
       new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       new_show.days_left = (closing_date_object - Date.today).to_i
+      if new_show.days_left < 0
+        self.all.delete(new_show)
+      end
     end
 
     brooklyn_shows
@@ -122,6 +134,9 @@ class Exhibitionist::Shows
       closing_date_object = Date.strptime("#{new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")}", "%m/%d/%y")
       new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
       new_show.days_left = (closing_date_object - Date.today).to_i 
+      if new_show.days_left < 0
+        self.all.delete(new_show)
+      end
     end
     
     new_museum_shows
@@ -145,8 +160,10 @@ class Exhibitionist::Shows
 
   def closing_info
 
-    if self.days_left == 1
-      puts "Hurry Up! This show closes in 1 day!!"
+    if self.days_left == 0
+      puts "Hurry up! This show closes today!!"
+    elsif self.days_left == 1
+      puts "Hurry Up! This show closes tomorrow!!"
     elsif self.days_left < 8
       puts "Hurry up! This show closes in #{self.days_left} days!! It closes on #{self.closing_date}."
     elsif self.closing_date == "Ongoing"
