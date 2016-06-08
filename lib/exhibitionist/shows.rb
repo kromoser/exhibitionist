@@ -18,17 +18,21 @@ class Exhibitionist::Shows
     current_shows_page = Nokogiri::HTML(html)
     current_shows = current_shows_page.css("div.general-content p strong em a")
     current_shows.each do |show|
-      new_show = self.new
-      met_shows << new_show
-      self.all << new_show
-      new_show.title = show.text
-      new_show.museum = Exhibitionist::Museums.find_or_create("Metropolitan Museum of Art")
-      new_show.dates = show.parent.parent.next.next
-      closing_date_object = Date.parse(new_show.dates.text.gsub(/^\n.+\–/, ""))
-      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
-      today = Date.today
-      new_show.days_left = (closing_date_object - today).to_i
-      if new_show.days_left < 0
+      begin
+        new_show = self.new
+        met_shows << new_show
+        self.all << new_show
+        new_show.title = show.text
+        new_show.museum = Exhibitionist::Museums.find_or_create("Metropolitan Museum of Art")
+        new_show.dates = show.parent.parent.next.next
+        closing_date_object = Date.parse(new_show.dates.text.gsub(/^\n.+\–/, ""))
+        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+        today = Date.today
+        new_show.days_left = (closing_date_object - today).to_i
+        if new_show.days_left < 0
+          self.all.delete(new_show)
+        end
+      rescue
         self.all.delete(new_show)
       end
     end
@@ -43,20 +47,24 @@ class Exhibitionist::Shows
     current_shows_page = Nokogiri::HTML(html)
     current_shows = current_shows_page.css("ul.calendar-tile-list__section--featured li.calendar-tile")
     current_shows.each do |show|
-      new_show = self.new
-      moma_shows << new_show
-      self.all << new_show
-      new_show.title = show.css("h3").text.strip
-      new_show.museum = Exhibitionist::Museums.find_or_create("MoMA")
-      if show.css("p").text.strip.downcase != "ongoing"
-        closing_date_object = Date.parse(show.css("p").text.gsub(/^(.+?),\s/, "").strip)
-        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
-        new_show.days_left = (closing_date_object - Date.today).to_i
-      else
-        new_show.closing_date = "Ongoing"
-        new_show.days_left = 9999
-      end
-      if new_show.days_left < 0
+      begin
+        new_show = self.new
+        moma_shows << new_show
+        self.all << new_show
+        new_show.title = show.css("h3").text.strip
+        new_show.museum = Exhibitionist::Museums.find_or_create("MoMA")
+        if show.css("p").text.strip.downcase != "ongoing"
+          closing_date_object = Date.parse(show.css("p").text.gsub(/^(.+?),\s/, "").strip)
+          new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+          new_show.days_left = (closing_date_object - Date.today).to_i
+        else
+          new_show.closing_date = "Ongoing"
+          new_show.days_left = 9999
+        end
+        if new_show.days_left < 0
+          self.all.delete(new_show)
+        end
+      rescue
         self.all.delete(new_show)
       end
     end
@@ -71,18 +79,23 @@ class Exhibitionist::Shows
     current_shows_page = Nokogiri::HTML(html)
     current_shows = current_shows_page.css("div.exhibitions div.image")
     current_shows.each do |show|
-      new_show = self.new
-      whitney_shows << new_show
-      self.all << new_show
-      new_show.title = show.css("h3 a")[0].text.gsub("â", "'").strip
-      new_show.museum = Exhibitionist::Museums.find_or_create("Whitney")
-      new_show.dates = show.css("h3 span")
-      closing_date_object = Date.parse(new_show.dates.text.gsub(/^.+\–/, ""))
-      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
-      new_show.days_left = (closing_date_object - Date.today).to_i
-      if new_show.days_left < 0
+      begin
+        new_show = self.new
+        whitney_shows << new_show
+        self.all << new_show
+        new_show.title = show.css("h3 a")[0].text.gsub("â", "'").strip
+        new_show.museum = Exhibitionist::Museums.find_or_create("Whitney")
+        new_show.dates = show.css("h3 span")
+        closing_date_object = Date.parse(new_show.dates.text.gsub(/^.+\–/, ""))
+        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+        new_show.days_left = (closing_date_object - Date.today).to_i
+        if new_show.days_left < 0
+          self.all.delete(new_show)
+        end
+      rescue
         self.all.delete(new_show)
       end
+
     end
    
     whitney_shows
@@ -99,16 +112,20 @@ class Exhibitionist::Shows
     current_shows = current_shows_page.css("div.exhibitions").xpath("//h1[1]/following-sibling::div").css("div.image-card h2")
 
     current_shows.each do |show|
-      new_show = self.new
-      brooklyn_shows << new_show
-      self.all << new_show
-      new_show.title = show.text
-      new_show.museum = Exhibitionist::Museums.find_or_create("Brooklyn Museum")
-      new_show.dates = show.parent.css("h4")
-      closing_date_object = Date.parse(new_show.dates.text.strip.gsub(/^.+\–/, ""))
-      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
-      new_show.days_left = (closing_date_object - Date.today).to_i
-      if new_show.days_left < 0
+      begin
+        new_show = self.new
+        brooklyn_shows << new_show
+        self.all << new_show
+        new_show.title = show.text
+        new_show.museum = Exhibitionist::Museums.find_or_create("Brooklyn Museum")
+        new_show.dates = show.parent.css("h4")
+        closing_date_object = Date.parse(new_show.dates.text.strip.gsub(/^.+\–/, ""))
+        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+        new_show.days_left = (closing_date_object - Date.today).to_i
+        if new_show.days_left < 0
+          self.all.delete(new_show)
+        end
+      rescue
         self.all.delete(new_show)
       end
     end
@@ -125,16 +142,20 @@ class Exhibitionist::Shows
     current_shows_page = Nokogiri::HTML(html)
     current_shows = current_shows_page.css("div.columns div.exh a")
     current_shows.each do |show|
-      new_show = self.new
-      new_museum_shows << new_show
-      self.all << new_show
-      new_show.title = show.css("span.title").text
-      new_show.museum = Exhibitionist::Museums.find_or_create("New Museum")
-      new_show.dates = show.css("span.date-range")
-      closing_date_object = Date.strptime("#{new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")}", "%m/%d/%y")
-      new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
-      new_show.days_left = (closing_date_object - Date.today).to_i 
-      if new_show.days_left < 0
+      begin
+        new_show = self.new
+        new_museum_shows << new_show
+        self.all << new_show
+        new_show.title = show.css("span.title").text
+        new_show.museum = Exhibitionist::Museums.find_or_create("New Museum")
+        new_show.dates = show.css("span.date-range")
+        closing_date_object = Date.strptime("#{new_show.dates.text.gsub("Ending Soon", "").strip.gsub(/^.+\-/, "")}", "%m/%d/%y")
+        new_show.closing_date = closing_date_object.strftime("%B %-d, %Y")
+        new_show.days_left = (closing_date_object - Date.today).to_i 
+        if new_show.days_left < 0
+          self.all.delete(new_show)
+        end
+      rescue
         self.all.delete(new_show)
       end
     end
