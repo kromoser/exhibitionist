@@ -120,7 +120,7 @@ class Exhibitionist::CLI
       end
       choose_again
     elsif input == "back"
-      display_shows
+      call
     else
       puts "I could't understand that."
       choose_again
